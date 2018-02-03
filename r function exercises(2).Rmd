@@ -262,8 +262,7 @@ tmpFn <- function(xVec){
 tmpFn(c(2:56, by=3))
 ```
 
-b) Generalise the function so that it takes two arguments: the vector \texttt{xVec} and an integer k
-which lies between 1 and n − 1 where n is the length of \texttt{xVec}.
+b) Generalise the function so that it takes two arguments: the vector \texttt{xVec} and an integer \texttt{k} which lies between 1 and $n-1$ where n is the length of \texttt{xVec}.
 The function should return a vector of the values $(r_{0} = 1, r_{1}, . . . , r_{k})$.
 
 ```{r}
