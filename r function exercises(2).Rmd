@@ -193,7 +193,8 @@ The function doesn't work on vectors.
 
 
 #### 8
-a)
+a) Suppose $x_{0}$ = 1 and $x_{1}$ = 2 and $x_{j} = x_{j-1} + \frac{2}{x_{j}-1}$ for j = 1,2,....
+Write a function \texttt{testLoop} which tkes the single argument \texttt{n} and returns the first \texttt{n - 1} values of the sequence ${x_{j}}_{j\geq0}:$ that means the values of $x_{0},x_{1},x_{2},...,x_{n-2}.$
 ```{r}
 testLoop <- function(n){
   x <- rep(NA, n-1)
@@ -205,7 +206,7 @@ testLoop <- function(n){
 }
 ```
 
-b)
+b) Now write a function \texttt{testLoop} which takes a single argument \texttt(yVec) which is a vector. The function should return $\sum_{j=1}^{n} e^{j}$ where n is the length of \texttt{yVec}.
 ```{r}
 testLoop2 <- function(yVec){
   sum(exp(seq(along = yVec)))
@@ -213,8 +214,9 @@ testLoop2 <- function(yVec){
 ```
 
 
-#### 9
-a)
+#### 9 
+Solution of the difference equation $x_{n}=rx_{n-1}(1-x_{n-1})$, with starting values $x_{1}$
+a) Write a function \texttt{quadmap( start, rho, niter )} which returns the vector $(x_{1},...x_{n})$ where $x_{k} = rx_{k-1}(1-x_{k-1})$ and \texttt{niter} denotes n, \texttt{start} denotes $x_{1}$, and \texttt{rho} denotes r.
 ```{r}
 quadmap <- function(start, rho, niter){
   x <- rep(NA, niter)
@@ -226,7 +228,8 @@ quadmap <- function(start, rho, niter){
 }
 ```
 
-b)
+b) Now write a function which determines the number of iterations needed to get $\left | x_{n} - x_{n-1} \right | < 0.02$.
+So this function has only 2 arguments: \texttt{start} and \texttt{rho}.
 ```{r}
 quad2 <- function(start, rho, eps=0.02){
   x1 <- start
@@ -243,7 +246,10 @@ quad2 <- function(start, rho, eps=0.02){
 
 
 #### 10
-a)
+a) Given a vector $(x_{1},...,x_{n})$, the sample autocorrelation of lag k is defined to be $x_{k} = \frac{\sum_{i=k+1}^{n} (x_{i} - \overline{x})(x_{i-k} - \overline{x})}{\sum_{i=1}^{n}(x_{i} - \overline{x})^{2}}$
+Write a function \texttt{tmpFn(xVec)} which takes a single argument \texttt{xVec} which is a vector and returns a
+\texttt{list} of two values: $r_{1}$ and $r_{2}$.
+
 ```{r}
 tmpFn <- function(xVec){
   x <- xVec - mean(xVec)
@@ -256,7 +262,10 @@ tmpFn <- function(xVec){
 tmpFn(c(2:56, by=3))
 ```
 
-b)
+b) Generalise the function so that it takes two arguments: the vector \texttt{xVec} and an integer k
+which lies between 1 and n − 1 where n is the length of \texttt{xVec}.
+The function should return a vector of the values $(r_{0} = 1, r_{1}, . . . , r_{k})$.
+
 ```{r}
 tmpFn <- function(xVec,k){
   x <- xVec - mean(xVec)
