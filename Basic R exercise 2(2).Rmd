@@ -210,8 +210,10 @@ solve(A)%*%y
 
 ### 7. Create a 6 x 10 matrix of random integers chosen from 1,2,...,10 by executing the following two lines of code:
 
+```{r}
 set.seed(75)  
 aMat <- matrix(sample(10, size=60, replace=TRUE), nr=6)  
+```
 
 Use the matrix you have created to answer these questions:  
 
