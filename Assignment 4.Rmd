@@ -1,0 +1,136 @@
+---
+title: "Assignment 4"
+author: "Han Nguyen"
+date: "February 20, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 10.5 Tibbles
+#### Question 1
+How can you tell if an object is a tibble?
+```{r}
+library(tidyverse)
+mtcars
+class(mtcars)
+class(as_tibble(mtcars))
+```
+Tibbles have class "tbl_df" and "tbl_". It doesn't print out all rows.
+
+#### Question 2
+Compare and contrast the following operations on a \texttt{data.frame} and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?
+
+```{r}
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+
+tbl <- as_tibble(df)
+tbl$x
+tbl[, "xyz"]
+tbl[, c("abc", "xyz")]
+```
+A column returns a vector, but multiple columns return a data.frame. 
+
+#### Question 3
+If you have the name of a variable stored in an object, e.g. \texttt{var <- "mpg"}, how can you extract the reference variable from a tibble?
+
+You would use a double bracket.
+
+#### Question 4
+Practice referring to non-syntactic names:
+```{r}
+annoying <- tibble(
+  `1` = 1:10,
+  `2` = `1` * 2 + rnorm(length(`1`))
+)
+
+annoying[["1"]]
+
+ggplot(annoying, aes(x = `1`, y = `2`)) +
+  geom_point()
+
+annoying[["3"]] <- annoying[["2"]]/annoying[["1"]]
+
+annoying <- rename(annoying, one = `1`, two = `2`,
+                   three = `3`)
+glimpse(annoying)
+```
+
+#### Question 5
+What does \texttt{tibble::enframe()} do? When might you use it?
+
+It converts vectors to a data frame with its names and values.
+
+#### Question 6
+What option controls how many additional column names are printed at the footer of a tibble?
+
+n_extra
+
+
+## 12.6.1 Case Study
+```{r}
+who
+
+who1 <- who %>% 
+  gather(new_sp_m014:newrel_f65, key = "key", value = "cases", na.rm = TRUE)
+who1
+
+who1 %>% 
+  count(key)
+
+who2 <- who1 %>% 
+  mutate(key = stringr::str_replace(key, "newrel", "new_rel"))
+who2
+
+who3 <- who2 %>% 
+  separate(key, c("new", "type", "sexage"), sep = "_")
+who3
+
+who3 %>% 
+  count(new)
+
+who4 <- who3 %>% 
+  select(-new, -iso2, -iso3)
+
+who5 <- who4 %>% 
+  separate(sexage, c("sex", "age"), sep = 1)
+who5
+```
+
+#### Question 1
+In this case study I set \texttt{na.rm = TRUE} just to make it easier to check that we had the correct values. Is this reasonable? Think about how missing values are represented in this dataset. Are there implicit missing values? What’s the difference between an \texttt{NA} and zero?
+
+It is reasonable to set na.rm = TRUE. There are zeros in the data, which can be implicit or explicit and we get the same results.
+
+#### Question 2
+What happens if you neglect the \texttt{mutate()} step?
+
+The rows for "newre1_" will have missing values.
+
+#### Question 3
+I claimed that \texttt{iso2} and \texttt{iso3} were redundant with \texttt{country}. Confirm this claim.
+
+```{r}
+select(who3, country, iso2, iso3) %>%
+  distinct() %>%
+  group_by(country) %>%
+  filter(n() > 1)
+```
+
+#### Question 4
+For each country, year, and sex compute the total number of cases of TB. Make an informative visualisation of the data.
+
+```{r}
+who5 %>%
+  group_by(country, year, sex) %>%
+  filter(year > 1995) %>%
+  summarise(cases = sum(cases)) %>%
+  unite(country_sex, country, sex, remove = FALSE) %>%
+  ggplot(aes(x = year, y = cases, group = country_sex, colour = sex)) +
+  geom_line()
+```
